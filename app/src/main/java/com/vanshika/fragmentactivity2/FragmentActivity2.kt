@@ -1,12 +1,19 @@
 package com.vanshika.fragmentactivity2
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.ContentValues.TAG
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.vanshika.fragmentactivity2.databinding.FragmentActivity2Binding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,6 +33,8 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
     var mainActivity : MainActivity?=null
     var btnChangeActivityText : Button?=null
     var binding : FragmentActivity2Binding ?= null
+    var simpleDateFormat = SimpleDateFormat("dd/MMM/yyyy")
+    var timeFormat = SimpleDateFormat("hh:mm aa")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +67,43 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
             else{
                 mainActivity?.changeActivityText("${binding?.etEnterSomething?.text?.toString()}")
             }
+        }
+        binding?.btnPickDate?.setOnClickListener {
+            DatePickerDialog(
+                requireContext(), R.style.MyDatePickerStyle,
+                { _, year, month, date ->
+                    Log.e(TAG, "year $year month $month date $date")
+                    var calendar = Calendar.getInstance()
+                    calendar.set(year, month, date)
+                    var formattedDate = simpleDateFormat.format(calendar.time)
+                    binding?.btnPickDate?.setText(formattedDate)
+                    if(calendar.timeInMillis> calendar.timeInMillis+10  && calendar.timeInMillis < calendar.timeInMillis-10){
+                        Toast.makeText(requireContext(), "Expired", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DATE),
+            ).show()
+        }
+
+        binding?.btnPickTime?.setOnClickListener {
+            TimePickerDialog(
+                requireContext(),R.style.MyTimePickerStyle, { _, hour, minute ->
+                    Log.e(TAG, "hour $hour minute $minute")
+                    var calendar = Calendar.getInstance()
+                    calendar.set(Calendar.HOUR_OF_DAY, hour)
+                    calendar.set(Calendar.MINUTE, minute)
+                    binding?.btnPickTime?.setText(timeFormat.format(calendar.time))
+
+                    if(calendar.timeInMillis < 9  && calendar.timeInMillis > 6){
+                        Toast.makeText(requireContext(), "Expired", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                Calendar.getInstance().get(Calendar.MINUTE),
+                false
+            ).show()
         }
     }
 
