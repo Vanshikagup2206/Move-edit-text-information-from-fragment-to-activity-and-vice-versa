@@ -30,9 +30,9 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    var mainActivity : MainActivity?=null
-    var btnChangeActivityText : Button?=null
-    var binding : FragmentActivity2Binding ?= null
+    var mainActivity: MainActivity? = null
+    var btnChangeActivityText: Button? = null
+    var binding: FragmentActivity2Binding? = null
     var simpleDateFormat = SimpleDateFormat("dd/MMM/yyyy")
     var timeFormat = SimpleDateFormat("hh:mm aa")
 
@@ -61,19 +61,18 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
         super.onViewCreated(view, savedInstanceState)
 //        btnChangeActivityText = view.findViewById(R.id.buttonChangeActivityText)
         binding?.buttonChangeActivityText?.setOnClickListener {
-            if(binding?.etEnterSomething?.text?.toString()?.isNullOrEmpty() == true){
+            if (binding?.etEnterSomething?.text?.toString()?.isNullOrEmpty() == true) {
                 binding?.etEnterSomething?.error = resources.getString(R.string.enter_something)
-            }
-            else{
+            } else {
                 mainActivity?.changeActivityText("${binding?.etEnterSomething?.text?.toString()}")
             }
         }
         binding?.btnPickDate?.setOnClickListener {
-            var calendar = Calendar.getInstance()
-            DatePickerDialog(
+            var datePickerDialog = DatePickerDialog(
                 requireContext(), R.style.MyDatePickerStyle,
                 { _, year, month, date ->
                     Log.e(TAG, "year $year month $month date $date")
+                    var calendar = Calendar.getInstance()
                     calendar.set(year, month, date)
                     var formattedDate = simpleDateFormat.format(calendar.time)
                     binding?.btnPickDate?.setText(formattedDate)
@@ -81,19 +80,32 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
                 Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),
                 Calendar.getInstance().get(Calendar.DATE),
-            ).show()
+            )
+            var calendar = Calendar.getInstance()
+            calendar.add(Calendar.DATE, -10)
+            datePickerDialog.datePicker.minDate = calendar.timeInMillis
+            calendar.add(Calendar.DATE, 20)
+            datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+            datePickerDialog.show()
         }
 
         binding?.btnPickTime?.setOnClickListener {
-            var calendar = Calendar.getInstance()
-            if(calendar.timeInMillis < 9  && calendar.timeInMillis > 6){
-                Toast.makeText(requireContext(), "Expired", Toast.LENGTH_SHORT).show()
-            }
             TimePickerDialog(
-                requireContext(),R.style.MyTimePickerStyle, { _, hour, minute ->
+                requireContext(), R.style.MyTimePickerStyle, { _, hour, minute ->
                     Log.e(TAG, "hour $hour minute $minute")
+                    var calendar = Calendar.getInstance()
                     calendar.set(Calendar.HOUR_OF_DAY, hour)
                     calendar.set(Calendar.MINUTE, minute)
+                    var newCalendar = Calendar.getInstance()
+                    newCalendar.set(Calendar.HOUR_OF_DAY, 9)
+                    var thirdCalendar = Calendar.getInstance()
+                    thirdCalendar.set(Calendar.HOUR_OF_DAY, 6)
+                    if (calendar.before(newCalendar))
+                        Toast.makeText(requireContext(), "Working hour closed", Toast.LENGTH_SHORT)
+                            .show()
+                    if (calendar.after(thirdCalendar))
+                        Toast.makeText(requireContext(), "Working hour closed", Toast.LENGTH_SHORT)
+                            .show()
                     binding?.btnPickTime?.setText(timeFormat.format(calendar.time))
                 },
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
