@@ -48,8 +48,7 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentActivity2Binding.inflate(layoutInflater)
@@ -91,7 +90,9 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
 
         binding?.btnPickTime?.setOnClickListener {
             TimePickerDialog(
-                requireContext(), R.style.MyTimePickerStyle, { _, hour, minute ->
+                requireContext(),
+                R.style.MyTimePickerStyle,
+                { _, hour, minute ->
                     Log.e(TAG, "hour $hour minute $minute")
                     var calendar = Calendar.getInstance()
                     calendar.set(Calendar.HOUR_OF_DAY, hour)
@@ -100,12 +101,16 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
                     newCalendar.set(Calendar.HOUR_OF_DAY, 9)
                     var thirdCalendar = Calendar.getInstance()
                     thirdCalendar.set(Calendar.HOUR_OF_DAY, 6)
-                    if (calendar.before(newCalendar))
-                        Toast.makeText(requireContext(), "Working hour closed", Toast.LENGTH_SHORT)
-                            .show()
-                    if (calendar.after(thirdCalendar))
-                        Toast.makeText(requireContext(), "Working hour closed", Toast.LENGTH_SHORT)
-                            .show()
+                    if (calendar.before(newCalendar)) Toast.makeText(
+                        requireContext(),
+                        "Working hour closed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    if (calendar.after(thirdCalendar)) Toast.makeText(
+                        requireContext(),
+                        "Working hour closed",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     binding?.btnPickTime?.setText(timeFormat.format(calendar.time))
                 },
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
@@ -126,13 +131,12 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentActivity2().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fun newInstance(param1: String, param2: String) = FragmentActivity2().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, param1)
+                putString(ARG_PARAM2, param2)
             }
+        }
     }
 
     override fun changeFragmentText(string: String) {
