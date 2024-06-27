@@ -101,17 +101,20 @@ class FragmentActivity2 : Fragment(), ActivityInterface {
                     newCalendar.set(Calendar.HOUR_OF_DAY, 9)
                     var thirdCalendar = Calendar.getInstance()
                     thirdCalendar.set(Calendar.HOUR_OF_DAY, 6)
-                    if (calendar.before(newCalendar)) Toast.makeText(
-                        requireContext(),
-                        "Working hour closed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    if (calendar.after(thirdCalendar)) Toast.makeText(
-                        requireContext(),
-                        "Working hour closed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding?.btnPickTime?.setText(timeFormat.format(calendar.time))
+                    if (calendar.before(newCalendar)) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Working hour closed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (calendar.after(thirdCalendar)) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Working hour closed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else
+                        binding?.btnPickTime?.setText(timeFormat.format(calendar.time))
                 },
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                 Calendar.getInstance().get(Calendar.MINUTE),
