@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.vanshika.fragmentactivity2.databinding.FragmentActivity2Binding
 
 // TODO: Rename parameter arguments, choose names that match
